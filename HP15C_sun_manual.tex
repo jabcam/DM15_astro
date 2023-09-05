@@ -41,7 +41,7 @@
 \newcommand{\slutex}{\begin{flushright}\rule{1ex}{1ex}\end{flushright}}
 
 
-\title{Sun's position for navigation with DM15/HP-15c\\{}Manual\\{}}
+\title{Sun's position for navigation with DM15L\\{}Manual\\{}}
 
 \author{Michael Josefsson}
 \date{\today}
@@ -56,7 +56,7 @@ The handheld calculator DM15 (a HP-15c look-a-like with more memory) can be used
 
 The algorithm relies on pure Keplerian motion of the sun. No planetary perturbations are taken into account. Resulting angular accuracy is about 1 minute of arc, which is adequate for general navigation at sea.
 
-\section*{General notes} 
+\chapter{Usage} 
 
 Before use, notice that: 
 
@@ -80,9 +80,9 @@ Before use, notice that:
  
 \end{itemize}
  
-\section*{Usage} 
+\section{User-defined  buttons} 
 
-Functional buttons are 
+The programs user-defined functions are accessed via the buttons below
 
 \begin{center}
 \begin{tabular}{ll}
@@ -98,70 +98,82 @@ Button & Function \\
 \end{tabular}
 \end{center}
 
-\subparagraph{An AP (\emph{Assumed Position})} is entered in registers \asm{\textbf{8}} and \asm{\textbf{.8}} before any calculations can be peformed.
+\section{Assumed Position} An AP (\emph{Assumed Position}) is entered in registers \asm{\textbf{8}} and \asm{\textbf{.8}} before any calculations can be peformed.
 
 \startex{Entering AP.} A location of Lat N$58\degree\, 34'$, Long E$14\degree\, 34'\,12''$ is entered into registers \asm{\textbf{8}} and \asm{\textbf{.8}}:
 
-\begin{tabular}{ccr|lc}
-Data & Format & Key & &Display shows\\
-\asm{58.3400} & $\pm dd.mmss$ & g ->H &\asm{STO 8} &\asm{58.5667}\\
-\asm{14.3412} & $\pm dd.mmss$ & g ->H &\asm{STO .8} &\asm{14.5700}\\
+\begin{center}
+\begin{tabular}{c|c|l|l|l}
+Data       & Format      & Key  &Display shows&Meaning\\
+\hline
+\asm{58.3400} & $\pm dd.mmss$ & g$\rightarrow$H \asm{STO 8} &\asm{58.5667} & Decimal degrees\\
+\asm{14.3412} & $\pm dd.mmss$ & g$\rightarrow$H \asm{STO .8} &\asm{14.5700}& Decimal degrees\\
 \end{tabular}
+\end{center}
 
 East and North are positive, West and South are negative. \\The position is permanently stored until manually changed and need only be set once.
 \slutex
 
-\subparagraph{Every day} has its own parameters that require the \asm{\textbf{A}}-routine to be run each new day.
+\section{Daily entry} Every day has its own parameters that require the \asm{\textbf{A}}-routine to be run once for each day.
 
-\startex{Entering the date.} Enter June 12th 2022, i.e. year 2022, month 6 and day 12
+\startex{Entering the date.} Enter June 12th 2022, i.e. year 2022, month 6 and day 12.
 
-\begin{tabular}{ccr|lc}
-Data       & Format      & Key & &Display shows\\
-\asm{2022} &  $YYYY$   & ENTER &&\asm{2022.0000}\\
-\asm{6} &  $mm$   & ENTER &&\asm{6.0000}\\
-
-\asm{12} &  $dd$   & f \asm{\textbf{A}} &&\asm{260.1816} ($260\degree\, 18'\,17''=260\degree\, 18{\cdot}3'$, GHA Aries at 0h)\\
+\begin{center}
+\begin{tabular}{c|c|r|l|l}
+Data       & Format      & Key  &Display shows&Meaning\\
+\hline
+\asm{2022} &  $YYYY$   & ENTER &\asm{2022.0000}\\
+\asm{6} &  $mm$   & ENTER &\asm{6.0000}\\
+\asm{12} &  $dd$   & f \asm{\textbf{A}} &\asm{260.1816}& $260\degree\, 18'\,16''$, GHA Aries at 0h\\
+&&&&(\emph{Nautical Almanac 2022}:  $260\degree\,18'{\cdot}1$)\\ 
 \end{tabular}
-
-This is only necessary once for each day.
+\end{center}
 
 \slutex 
 
-\subparagraph{Next the sun's coordinates} for time of date UT/GMT can be  calculated.
+\section{Sun's Altitude and Azimuth} Next the sun's position for time of date UT/GMT can be  calculated.
 
-\startex{Find sun's Hc and Az for UT 09h 54m 48s. Date entered as above.} Enter time in format $hh.mmss$ then use routine \asm{\textbf{B}}.
+\startex{Find sun's Hc and Az for UT 09h 54m 48s. Date as above.} Enter time in format $hh.mmss$ then use routine \asm{\textbf{B}}.
 
-\begin{tabular}{ccr|lc}
-Data       & Format      & Key & &Display shows\\
-\asm{9.5448} &  $hh.mmss$   & f \asm{\textbf{B}} &&\asm{52.3845} ( Hc = $52\degree\, 38'\,45''$ )\\
-&    &  \asm{\textbf{x<>y}} &&\asm{154.1140} ( Az = $154\degree\, 11'\,40''$ )\\
+\begin{center}
+\begin{tabular}{c|c|r|l|l}
+Data       & Format      & Key  &Display shows&Meaning\\
+\hline\asm{9.5448} &  $hh.mmss$   & f \asm{\textbf{B}} &\asm{52.3845} & Hc = $52\degree\, 38'\,45''$ \\
+&    &  \asm{\textbf{x<>y}} &\asm{154.1140} & Az = $154\degree\, 11'\,40''$ \\
 \end{tabular}
+\end{center}
 
 \textbf{Result:} Hc = $52\degree\, 38{\cdot}7'$, Az = $154\degree$
 
 A new time can be entered directly. For example, also find sun's Hc and Az a few minutes later at UT 10h 02m 30s. 
 
-\begin{tabular}{ccr|lc}
-Data       & Format      & Key & &Display shows\\
-\asm{10.0230} &  $hh.mmss$   & f \asm{\textbf{B}} &&\asm{53.0338} ( Hc = $53\degree\, 03'\,38''$ )\\
-&    &  \asm{\textbf{x<>y}} &&\asm{157.0236} ( Az = $157\degree\, 2'\,36''$ )\\
+\begin{center}
+\begin{tabular}{c|c|r|l|l}
+Data       & Format      & Key  &Display shows&Meaning\\
+\hline
+\asm{10.0230} &  $hh.mmss$   & f \asm{\textbf{B}} &\asm{53.0338}&  Hc = $53\degree\, 03'\,38''$ \\
+&    &  \asm{\textbf{x<>y}} &\asm{157.0236}&  Az = $157\degree\, 2'\,36''$ \\
 \end{tabular}
+\end{center}
 
 \textbf{Result:} Hc = $53\degree\, 03{\cdot}6'$, Az = $157\degree$
 
 \slutex
 
-\section*{GHA and declination} 
+\section{GHA and declination} 
 The program can also produce values for GHA and declination imitating the \emph{Nautical Almanac}.
 
-\startex{Find GHA and decl for 10h on June 12th 2023} The date must be set as above. Now enter time to get Hc and Az if wanted. Or ignore the output and use \asm{\textbf{GSB .5}} to get GHA and decl:
+\startex{Find GHA and decl for 10h on June 12th 2023} After calculating Hc and Az as above, use \asm{\textbf{GSB .5}} to get GHA and declination $\delta$:
 
-\begin{tabular}{ccr|lc}
-Data       & Format      & Key  &Display shows\\
-\asm{10.0000} &  $hh.mmss$   & f \asm{\textbf{B}} &\asm{52.5508} ( Hc = $52\degree\, 55'\,08''$, ignore )\\
-&    &  \asm{\textbf{GSB .5}} &\asm{330.0248} ( GHA = $330\degree\, 2'\,48''$ )\\
-&    &  \asm{\textbf{x<>y}} &\asm{23.0901} ( Decl = $23\degree\, 09'\,01''$ )\\
+\begin{center}
+\begin{tabular}{c|c|r|l|l}
+Data       & Format      & Key  &Display shows&Meaning\\
+\hline
+\asm{10.0000} &  $hh.mmss$   & f \asm{\textbf{B}} &\asm{52.5508} &Hc = $52\degree\, 55'\,08''$\\
+&    &  \asm{\textbf{GSB .5}} &\asm{330.0248} & GHA = $330\degree\, 2'\,48''$ \\
+&    &  \asm{\textbf{x<>y}} &\asm{23.0901} & $\delta$ = $23\degree\, 09'\,01''$ \\
 \end{tabular}
+\end{center}
 
 \textbf{Result:} GHA = $330\degree\, 2{\cdot}8'$, Decl = $23\degree\, 09{\cdot}0'$ (\emph{Nautical Almanac} gives $330\degree\, 2{\cdot}8'$ and $23\degree\, 8{\cdot}8'$).
 
@@ -172,23 +184,28 @@ GHA and Decl can of course be calculated for any other time during the day in th
 
 The coordinates of a celestial object, for example a star, are given as SHA (\emph{Sidereal Hour Angle}) and declination.\footnote{Right Ascension can be entered as $\alpha=360 - SHA$ if needed.}
 
-\startex{Coordinates of \emph{Vega} (SHA $80\degree\, 34{\cdot}3'$, declination $38\degree\, 48{\cdot}2'$) are entered}
+\startex{Enter coordinates of \emph{Vega} (SHA $80\degree\, 34{\cdot}3'$, declination $38\degree\, 48{\cdot}2'$).}
 
-
-\begin{tabular}{ccr|lc}
-Data       & Format      & Key & Display shows\\
-\asm{80.3418} &  $ddd.mmss$   & ENTER &\asm{80.3418}&\\
-\asm{38.4812} &  $ddd.mmss$   & f \asm{\textbf{C}} & \asm{279.4283} (RA in decimal degrees as a bonus)\\
+\begin{center}
+\begin{tabular}{c|c|r|l|l}
+Data       & Format      & Key  &Display shows&Meaning\\
+\hline
+\asm{80.3418} &  $ddd.mmss$   & ENTER &\asm{80.3418}&SHA\\
+\asm{38.4812} &  $ddd.mmss$   & f \asm{\textbf{C}} & \asm{279.4283}& RA in decimal degrees\\
 \end{tabular}
+\end{center}
+
 
 Now find \emph{Vega}'s calculated position for UT = 23h 02m 10s on June 12th 2023 already entered above.
 
-\begin{tabular}{ccr|lc}
-Data       & Format      & Key & Display shows\\
-\asm{23.0210} &  $hh.mmss$   & f \asm{\textbf{D}} &\asm{67.0015} ( Hc = $67\degree\, 00'\,15''$ ) \\
-&    &  \asm{\textbf{x<>y}} &\asm{141.1224} ( Az = $141\degree\, 12'\,24''$ )\\
-\\
+\begin{center}
+\begin{tabular}{c|c|r|l|l}
+Data       & Format      & Key  &Display shows&Meaning\\
+\hline
+\asm{23.0210} &  $hh.mmss$   & f \asm{\textbf{D}} &\asm{67.0015} & Hc = $67\degree\, 00'\,15''$  \\
+&    &  \asm{\textbf{x<>y}} &\asm{141.1224} & Az = $141\degree\, 12'\,24''$ \\
 \end{tabular}
+\end{center}
 
 \textbf{Result:} Vega can be expected at \emph{Hc} = $67\degree\, 0{\cdot}2'$ and \emph{Zn} =  $141\degree$. Set the sextant for $67\degree$ and search for it in south-east.
 \slutex
@@ -197,42 +214,45 @@ Data       & Format      & Key & Display shows\\
 
 Find GHA Aries on 4 October 2022 at 7h 57m 20s. Also find LHA Aries longitude in \asm{.8} ($14\degree\, 34'\,12''$ E as before).
 
-\begin{tabular}{ccr|lc}
-Data       & Format      & Key & Display shows\\
+\begin{center}
+\begin{tabular}{c|c|r|l|l}
+Data       & Format      & Key  &Display shows&Meaning\\
 \hline
-\asm{2022} &  $YYYY$   & ENTER &\asm{2022.0000}\\
-\asm{10} &  $mm$   & ENTER &\asm{10.0000}\\
-\asm{4} &  $dd$   & f \asm{\textbf{A}} &\asm{12.4006} ($12\degree\, 40'\,6''$, GHA Aries at 0h)\\
-\asm{7.5720} &  $hh.mmss$   & f \asm{\textbf{E}} &\asm{132.1942} ( GHA Aries = $132\degree\, 19'\,42''$ ) \\
-&    &  \asm{\textbf{x<>y}} &\asm{146.5354} ( LHA Aries = $146\degree\, 53'\,54''$ )\\
+\asm{2022} &  $YYYY$   & ENTER &\asm{2022.0000}& Year\\
+\asm{10} &  $mm$   & ENTER &\asm{10.0000} & Month\\
+\asm{4} &  $dd$   & f \asm{\textbf{A}} &\asm{12.4006} &$12\degree\, 40'\,6''$, GHA Aries at 0h\\
+\asm{7.5720} &  $hh.mmss$   & f \asm{\textbf{E}} &\asm{132.1942} & GHA Aries = $132\degree\, 19'\,42''$ \\
+&    &  \asm{\textbf{x$\leftrightarrow$y}} &\asm{146.5354} & LHA Aries = $146\degree\, 53'\,54''$ \\
 \end{tabular}
-
+\end{center}
 
 \section*{Use as \emph{Sight Reduction Table}} 
 
-The program can also solve the navigational triangle and be used as a (Ho-214/Ho-229 etc) \emph{Sight Reduction Table} replacement. To solve the triangle  AP latitude, object's declination and hour angle needs to be entered.
+The program can also solve the navigational triangle and be used as a  \emph{Sight Reduction Table} replacement (Ho-214/Ho-229~etc). To solve the triangle  1) AP latitude, 2) object's declination and 3) hour angle need to be entered.
 
 AP latitude is entered in register \asm{8} as before, declination is set via \textbf{\textsf{C}} and hour angle is entered into register \asm{.2}. The hour angle is positive if westward.
 
-\startex{Find Hc and Az as in Ho-214} Assume longitude $58\degree$~N, Declination $8\degree\, 30'$ and an hour angle of $54\degree$ (object to the west of observer).
+\startex{Find Hc and Az as in Ho-214} Assume latitude N$58\degree$, Declination $8\degree\, 30'$ and an hour angle of $54\degree$ (object to the west of observer).
 
-\begin{tabular}{ccr|lc}
-Data       & Format      & Key & Display shows\\
+\begin{center}
+\begin{tabular}{c|c|r|l|l}
+Data       & Format      & Key  &Display shows&Meaning\\
 \hline
-\asm{58} &  $dd.mmss$   & \asm{STO 8} &\asm{58.0000}\\
-\asm{8.3000} &  $dd.mmss$   & \textbf{\textsf{C}} &\asm{8.5000}\\
-\asm{54}     &  $dd.mmss$   & g ->H & \asm{54.0000}\\
+\asm{58} &  $dd.mmss$   & \asm{STO 8} &\asm{58.0000}& Decimal latitude \\
+\asm{8.3000} &  $dd.mmss$   & \textbf{\textsf{C}} &\asm{8.5000}& Decimal declination\\
+\asm{54}     &  $dd.mmss$   & g$\rightarrow$H & \asm{54.0000} & Decimal Hour angle\\
              &              & \asm{STO .2} & \asm{54.0000}\\
-             &              & \asm{GSB 7} & \asm{25.4102} ( Hc = $25\degree\, 41'\,02''$)\\
-             &              &  \asm{\textbf{x<>y}} &\asm{242.3616} ( Az = $242\degree\, 36'\,16''$ = 242.60\degree)\\
+             &              & \asm{GSB 7} & \asm{25.4102} & Hc = $25\degree\, 41'\,02''$\\
+             &              &  \asm{\textbf{x$\leftrightarrow$y}} &\asm{242.3616} & Az = $242\degree\, 36'\,16''$ = 242.6\degree\\
 \end{tabular}
+\end{center}
 
 Ho-214 gives Alt. = $25\degree\, 41{\cdot}0'$ and  Az. = $117.4\degree$. Where true azimuth is $360-117.4=242.6\degree$. 
 
 
+\appendix
 
-
-\section*{Program and information}
+\chapter{Program and information}
 \subsection*{Register usage}
 The lower registers \asm{r0..r7} are used by the calculator's statistics functions and are not \emph{permanently} used by this program. They \emph{are} used however for intermediate results via the normal operating sequences \textbf{\textsf{A-B}} or \textbf{\textsf{A-C-D}} or \textbf{\textsf{A-E}}.
 
@@ -261,20 +281,23 @@ For a fresh install of the program perform steps 1--6 below.
  \item On device enable serial communication (hold C while pressing ON-button) 
  \item \textsf{File/Write DM15}
  \end{itemize}
- \item Before use a number of constants must be entered in the following registers:
+ \item Before use enter the following constants constants into the respective registers:
   
- \begin{tabular}{cl}
- Register & Constant\\
+ \begin{center}
+ \begin{tabular}{cll}
+ Register & Constant & Meaning\\
  \hline
- \asm{.3} & \asm{\textbf{279.4055638}}\\
- \asm{.4} &  \asm{\textbf{283.3328093}}\\
- \asm{.5} &  \asm{\textbf{1.016860112}}\\
- \asm{.6} &  \asm{\textbf{23.44188400}}\\
- \asm{.7} &  \asm{\textbf{0.002737909}}\\
- \hline
- \end{tabular}
+ \asm{.3} & \asm{\textbf{279.4055638}} & Longitude at epoch JD=2459944.5\\
+ \asm{.4} &  \asm{\textbf{283.3328093}} & Longitude of perigee for epoch\\
+ \asm{.5} &  \asm{\textbf{1.016860112}} & $\sqrt{\frac{1+e}{1-e}}$\\
+ \asm{.6} &  \asm{\textbf{23.44188400}} & Ecliptic obliquity\\
+ \asm{.7} &  \asm{\textbf{0.002737909}} & $\frac{1}{365.2422}$\\
  
- \item That's it. Now the run samples in this document give expected results.
+ 
+ \end{tabular}
+ \end{center}
+ 
+ \item That's it. Now the samples in this document give expected results.
 \end{enumerate}
 
 \subsection*{Program listing}
