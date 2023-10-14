@@ -17,7 +17,7 @@
 #R11:Hc, calculated altitude, degrees
 #R12:LHA of object -> Zn, calculated azimuth
 #R13:Constant, L of epoch 279.4055638 for JD=2459944.5
-#R14:Constant, Long of perigee, 283.3328090 fo JD above
+#R14:Constant, Long of perigee, 283.3328093 fo JD above
 #R15:1.016860112 [sqrt((1+e)/(1-e)]
 #R16:Constant, Obliquity, 23.441884
 #R17:1/365.2422

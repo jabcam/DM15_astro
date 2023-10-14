@@ -1,4 +1,4 @@
-\documentclass[swedish,a4paper,onepage, 11pt]{scrbook}
+\documentclass[english,a4paper,onepage, 12pt]{scrbook}
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -16,13 +16,14 @@
 \usepackage{aecompl}
 \usepackage{amssymb}
 \usepackage{amsmath}
-%\usepackage{bookman}
+\usepackage{bookman}
 \usepackage{multicol}
 \usepackage{gensymb}
 \usepackage{listings}
 \usepackage{pdfpages}
-
-
+% For astrology signs
+\usepackage{wasysym}
+\usepackage{marvosym}
 
 
 \usepackage{geometry}
@@ -41,22 +42,25 @@
 \newcommand{\slutex}{\begin{flushright}\rule{1ex}{1ex}\end{flushright}}
 
 
-\title{Sun's position for navigation with DM15L\\{}Manual\\{}}
+\title{Sun's position for navigation with DM15/HP-15c\\{}Manual\\{}}
 
 \author{Michael Josefsson}
 \date{\today}
 \maketitle
+\tableofcontents
 
 \addtolength{\evensidemargin}{-2.0cm}
 \addtolength{\oddsidemargin}{2.0cm}
+\setcounter{chapter}{1}
 
-\subsection*{Overview}
+\newpage
+\section{Overview}
 
 The handheld calculator DM15 (a HP-15c look-a-like with more memory) can be used for determining the sun's position with precision enough for celestial navigation purposes. The accompanying program, listed in the Appendix, constitutes a handy tool for either finding the \emph{Nautical Almanac}'s entries GHA (\emph{Greenwich Hour Angle}) and Declination, or --- with AP (\emph{Assumed Position}) --- directly calculate the sun's Altitude \emph{Hc} and Azimuth \emph{Az} for this position.
 
 The algorithm relies on pure Keplerian motion of the sun. No planetary perturbations are taken into account. Resulting angular accuracy is about 1 minute of arc, which is adequate for general navigation at sea.
 
-\chapter{Usage} 
+\section{General notes} 
 
 Before use, notice that: 
 
@@ -80,185 +84,201 @@ Before use, notice that:
  
 \end{itemize}
  
-\section{User-defined  buttons} 
 
-The programs user-defined functions are accessed via the buttons below
+\section{Public routines} 
+
+Full use of the program entails the following routines. Their use is described in this document. 
 
 \begin{center}
 \begin{tabular}{ll}
 Button & Function \\
 \hline
-\textbf{\textsf{A}} & Date for Aries angle at UT=0h\\
+\textbf{\textsf{A}} & Date for \Aries\, hour angle at UT=0h\\
 \textbf{\textsf{B}} & Time for Sun Altitude and Azimuth \\
 \textbf{\textsf{C}} & SHA and declination for \emph{own object} \\
-\textbf{\textsf{D}} & Time for \emph{own object}'s Altitude and Azimuth \\
-\textbf{\textsf{E}} & Time for GHA Aries and LHA Aries\\
-\textbf{\textsf{.5}} & After \textbf{\textsf{B}} for GHA and declination\\
-& (as a Nautical Almanac entry)\\
+\textbf{\textsf{D}} & GMT $\rightarrow$ \emph{own object}'s Altitude and Azimuth \\
+\textbf{\textsf{E}} & GMT $\rightarrow$ GHA \Aries\, and LHA \Aries\,\\
+\textbf{\textsf{.0}} & GHA, time and declination $\rightarrow$ Altitude and Azimuth\\
+
+\textbf{\textsf{.5}} & After \textbf{\textsf{B}} $\rightarrow$ GHA and declination\\
+& (mimicks a \emph{Nautical Almanac} entry)\\
 \end{tabular}
 \end{center}
 
-\section{Assumed Position} An AP (\emph{Assumed Position}) is entered in registers \asm{\textbf{8}} and \asm{\textbf{.8}} before any calculations can be peformed.
+\section{Usage for Sun}
+ 
+The program's main purpose is to give altitude and azimuth for the sun. This requires an \emph{Assumed Position}, date and time.
+
+\subsection{First set AP (\emph{Assumed Position})} An AP is entered in registers \asm{\textbf{8}} and \asm{\textbf{.8}} before any calculations can be peformed.
 
 \startex{Entering AP.} A location of Lat N$58\degree\, 34'$, Long E$14\degree\, 34'\,12''$ is entered into registers \asm{\textbf{8}} and \asm{\textbf{.8}}:
 
-\begin{center}
-\begin{tabular}{c|c|l|l|l}
-Data       & Format      & Key  &Display shows&Meaning\\
-\hline
-\asm{58.3400} & $\pm dd.mmss$ & g$\rightarrow$H \asm{STO 8} &\asm{58.5667} & Decimal degrees\\
-\asm{14.3412} & $\pm dd.mmss$ & g$\rightarrow$H \asm{STO .8} &\asm{14.5700}& Decimal degrees\\
+\begin{tabular}{ccr|lc}
+Data & Format & Key & &Display shows\\
+\asm{58.3400} & $\pm dd.mmss$ & g ->H &\asm{STO 8} &\asm{58.5667}\\
+\asm{14.3412} & $\pm dd.mmss$ & g ->H &\asm{STO .8} &\asm{14.5700}\\
 \end{tabular}
-\end{center}
 
 East and North are positive, West and South are negative. \\The position is permanently stored until manually changed and need only be set once.
 \slutex
 
-\section{Daily entry} Every day has its own parameters that require the \asm{\textbf{A}}-routine to be run once for each day.
+\newpage
 
-\startex{Entering the date.} Enter June 12th 2022, i.e. year 2022, month 6 and day 12.
+\subsection{Then set the date} Each day has its own parameters and require the \asm{\textbf{A}}-routine to be run each new day.
 
-\begin{center}
-\begin{tabular}{c|c|r|l|l}
-Data       & Format      & Key  &Display shows&Meaning\\
-\hline
-\asm{2022} &  $YYYY$   & ENTER &\asm{2022.0000}\\
-\asm{6} &  $mm$   & ENTER &\asm{6.0000}\\
-\asm{12} &  $dd$   & f \asm{\textbf{A}} &\asm{260.1816}& $260\degree\, 18'\,16''$, GHA Aries at 0h\\
-&&&&(\emph{Nautical Almanac 2022}:  $260\degree\,18'{\cdot}1$)\\ 
+\startex{Entering the date.} Enter June 12th 2022, i.e. year 2022, month 6 and day 12
+
+\begin{tabular}{ccr|lc}
+Data       & Format      & Key & &Display shows\\
+\asm{2022} &  $YYYY$   & ENTER &&\asm{2022.0000}\\
+\asm{6} &  $mm$   & ENTER &&\asm{6.0000}\\
+
+\asm{12} &  $dd$   & f \asm{\textbf{A}} &&\asm{260.1816} ($260\degree\, 18'\,17''=260\degree\, 18{\cdot}3'$, GHA \Aries\, at 0h)\\
 \end{tabular}
-\end{center}
+
+This is only necessary once for each day.
 
 \slutex 
 
-\section{Sun's Altitude and Azimuth} Next the sun's position for time of date UT/GMT can be  calculated.
+\subsection{Finally enter time in GMT for Altitude and Azimuth} Next the sun's coordinates for time of date UT/GMT can be  calculated.
 
-\startex{Find sun's Hc and Az for UT 09h 54m 48s. Date as above.} Enter time in format $hh.mmss$ then use routine \asm{\textbf{B}}.
+\startex{Find sun's Hc and Az for UT 09h 54m 48s. Date entered as above.} Enter time in format $hh.mmss$ then use routine \asm{\textbf{B}}.
 
-\begin{center}
-\begin{tabular}{c|c|r|l|l}
-Data       & Format      & Key  &Display shows&Meaning\\
-\hline\asm{9.5448} &  $hh.mmss$   & f \asm{\textbf{B}} &\asm{52.3845} & Hc = $52\degree\, 38'\,45''$ \\
-&    &  \asm{\textbf{x<>y}} &\asm{154.1140} & Az = $154\degree\, 11'\,40''$ \\
+\begin{tabular}{ccr|lc}
+Data       & Format      & Key & &Display shows\\
+\asm{9.5448} &  $hh.mmss$   & f \asm{\textbf{B}} &&\asm{52.3845} ( Hc = $52\degree\, 38'\,45''$ )\\
+&    &  \asm{\textbf{x<>y}} &&\asm{154.1140} ( Az = $154\degree\, 11'\,40''$ )\\
 \end{tabular}
-\end{center}
 
 \textbf{Result:} Hc = $52\degree\, 38{\cdot}7'$, Az = $154\degree$
 
 A new time can be entered directly. For example, also find sun's Hc and Az a few minutes later at UT 10h 02m 30s. 
 
-\begin{center}
-\begin{tabular}{c|c|r|l|l}
-Data       & Format      & Key  &Display shows&Meaning\\
-\hline
-\asm{10.0230} &  $hh.mmss$   & f \asm{\textbf{B}} &\asm{53.0338}&  Hc = $53\degree\, 03'\,38''$ \\
-&    &  \asm{\textbf{x<>y}} &\asm{157.0236}&  Az = $157\degree\, 2'\,36''$ \\
+\begin{tabular}{ccr|lc}
+Data       & Format      & Key & &Display shows\\
+\asm{10.0230} &  $hh.mmss$   & f \asm{\textbf{B}} &&\asm{53.0338} ( Hc = $53\degree\, 03'\,38''$ )\\
+&    &  \asm{\textbf{x<>y}} &&\asm{157.0236} ( Az = $157\degree\, 2'\,36''$ )\\
 \end{tabular}
-\end{center}
 
 \textbf{Result:} Hc = $53\degree\, 03{\cdot}6'$, Az = $157\degree$
 
 \slutex
 
-\section{GHA and declination} 
-The program can also produce values for GHA and declination imitating the \emph{Nautical Almanac}.
 
-\startex{Find GHA and decl for 10h on June 12th 2023} After calculating Hc and Az as above, use \asm{\textbf{GSB .5}} to get GHA and declination $\delta$:
+\subsection{Calculate Sun's GHA and Declination} 
+If wanted the program can also produce values for GHA and Declination imitating the \emph{Nautical Almanac}.
 
-\begin{center}
-\begin{tabular}{c|c|r|l|l}
-Data       & Format      & Key  &Display shows&Meaning\\
-\hline
-\asm{10.0000} &  $hh.mmss$   & f \asm{\textbf{B}} &\asm{52.5508} &Hc = $52\degree\, 55'\,08''$\\
-&    &  \asm{\textbf{GSB .5}} &\asm{330.0248} & GHA = $330\degree\, 2'\,48''$ \\
-&    &  \asm{\textbf{x<>y}} &\asm{23.0901} & $\delta$ = $23\degree\, 09'\,01''$ \\
+\startex{Find GHA and decl for 10h on June 12th 2023} The date must be set as above. Now enter time to get Hc and Az if wanted. Or ignore the output and use \asm{\textbf{GSB .5}} to get GHA and decl:
+
+\begin{tabular}{ccr|lc}
+Data       & Format      & Key  &Display shows\\
+\asm{10.0000} &  $hh.mmss$   & f \asm{\textbf{B}} &\asm{52.5508} ( Hc = $52\degree\, 55'\,08''$, ignore )\\
+&    &  \asm{\textbf{GSB .5}} &\asm{330.0248} ( GHA = $330\degree\, 2'\,48''$ )\\
+&    &  \asm{\textbf{x<>y}} &\asm{23.0901} ( Decl = N$23\degree\, 09'\,01''$ )\\
 \end{tabular}
-\end{center}
 
-\textbf{Result:} GHA = $330\degree\, 2{\cdot}8'$, Decl = $23\degree\, 09{\cdot}0'$ (\emph{Nautical Almanac} gives $330\degree\, 2{\cdot}8'$ and $23\degree\, 8{\cdot}8'$).
+\textbf{Result:} GHA = $330\degree\, 2{\cdot}8'$, Decl = N$23\degree\, 09{\cdot}0'$ (\emph{Nautical Almanac} gives $330\degree\, 2{\cdot}8'$ and N$23\degree\, 8{\cdot}8'$).
 
 GHA and Decl can of course be calculated for any other time during the day in the same manner. 
-\slutex
+%\slutex
 
-\section*{Specify and calculate position for an object with known SHA and declination} 
 
-The coordinates of a celestial object, for example a star, are given as SHA (\emph{Sidereal Hour Angle}) and declination.\footnote{Right Ascension can be entered as $\alpha=360 - SHA$ if needed.}
 
-\startex{Enter coordinates of \emph{Vega} (SHA $80\degree\, 34{\cdot}3'$, declination $38\degree\, 48{\cdot}2'$).}
 
-\begin{center}
-\begin{tabular}{c|c|r|l|l}
-Data       & Format      & Key  &Display shows&Meaning\\
-\hline
-\asm{80.3418} &  $ddd.mmss$   & ENTER &\asm{80.3418}&SHA\\
-\asm{38.4812} &  $ddd.mmss$   & f \asm{\textbf{C}} & \asm{279.4283}& RA in decimal degrees\\
+\vspace{-5mm}
+
+\section{SHA and Declination $\rightarrow$ Altitude and Azimuth}
+
+The coordinates of a celestial object, for example a star, are given as SHA (\emph{Sidereal Hour Angle}) and Declination.\footnote{Right Ascension can be entered as $\alpha=360 - SHA$ if needed.}
+
+\startex{Coordinates of \emph{Vega} (SHA $80\degree\, 34{\cdot}3'$, declination $38\degree\, 48{\cdot}2'$) are entered}
+
+
+\begin{tabular}{ccr|lc}
+Data       & Format      & Key & Display shows\\
+\asm{80.3418} &  $ddd.mmss$   & ENTER &\asm{80.3418}&\\
+\asm{38.4812} &  $ddd.mmss$   & f \asm{\textbf{C}} & \asm{279.4283} (RA in decimal degrees as a bonus)\\
 \end{tabular}
-\end{center}
-
 
 Now find \emph{Vega}'s calculated position for UT = 23h 02m 10s on June 12th 2023 already entered above.
 
-\begin{center}
-\begin{tabular}{c|c|r|l|l}
-Data       & Format      & Key  &Display shows&Meaning\\
-\hline
-\asm{23.0210} &  $hh.mmss$   & f \asm{\textbf{D}} &\asm{67.0015} & Hc = $67\degree\, 00'\,15''$  \\
-&    &  \asm{\textbf{x<>y}} &\asm{141.1224} & Az = $141\degree\, 12'\,24''$ \\
+\begin{tabular}{ccr|lc}
+Data       & Format      & Key & Display shows\\
+\asm{23.0210} &  $hh.mmss$   & f \asm{\textbf{D}} &\asm{67.0015} ( Hc = $67\degree\, 00'\,15''$ ) \\
+&    &  \asm{\textbf{x<>y}} &\asm{141.1224} ( Az = $141\degree\, 12'\,24''$ )\\
+\\
 \end{tabular}
-\end{center}
 
 \textbf{Result:} Vega can be expected at \emph{Hc} = $67\degree\, 0{\cdot}2'$ and \emph{Zn} =  $141\degree$. Set the sextant for $67\degree$ and search for it in south-east.
+
+
+\section{Date and time $\rightarrow$ GHA \Aries\,  and LHA \Aries\,} 
+
+Find GHA \Aries\, on 4 October 2022 at 7h 57m 20s. Also find LHA \Aries\, longitude in \asm{.8} (E$14\degree\, 34'\,12''$  as before).
+
+\begin{tabular}{ccr|lc}
+Data       & Format      & Key & Display shows\\
+\hline
+\asm{2022} &  $YYYY$   & ENTER &\asm{2022.0000}\\
+\asm{10} &  $mm$   & ENTER &\asm{10.0000}\\
+\asm{4} &  $dd$   & f \asm{\textbf{A}} &\asm{12.4006} ($12\degree\, 40'\,6''$, GHA \Aries\, at 0h)\\
+\asm{7.5720} &  $hh.mmss$   & f \asm{\textbf{E}} &\asm{132.1942} ( GHA \Aries\, = $132\degree\, 19'\,42''$ ) \\
+&    &  \asm{\textbf{x<>y}} &\asm{146.5354} ( LHA \Aries\, = $146\degree\, 53'\,54''$ )\\
+\end{tabular}
+
+\section{GHA and Declination $\rightarrow$ Altitude and Azimuth} 
+
+When coordinates are given as GHA (\emph{Greenwich Hour Angle}) and Declination, as is the case for the planets and Moon listed in NA,  proceed as follows. As GHA changes continuously during the day a time is also required.
+
+\startex{Coordinates of \emph{Sun} as from \emph{Nautical Almanac} above are GHA $330\degree\, 2{\cdot}8'$, declination N$23\degree\, 8{\cdot}8'$ at 10h.}
+
+
+\begin{tabular}{ccr|lc}
+Data       & Format      & Key & Display shows\\
+\asm{330.0248} &  $ddd.mmss$   & \asm{ENTER} &\asm{330.0248}&\\
+\asm{10.0000} &  $ddd.mmss$   & \asm{GSB .0} &\asm{279.3413}, ignore&\\
+\asm{23.0848} &  $ddd.mmss$   & \asm{R/S} & \asm{52.5455}  ( Hc = $52\degree\, 54'\,55''$ ) 
+\\
+&    &  \asm{\textbf{x<>y}} &\asm{156.0821} ( Az = $156\degree\, 08'\,21''$ )\\
+
+\end{tabular}
+
+\textbf{Result:} The \emph{Sun} is expected at a height of $52\degree\, 54{\cdot}9'$ and in a direction of $156\degree$.\footnote{Compare these results with the direct method above ($52\degree\, 54'\,55''$ vs $52\degree\, 55'\,08''$ and $156\degree\, 08'\,16''$ vs $156\degree\, 08'\,21''$). Pretty close but not exactly the same. }
 \slutex
 
-\section*{GHA Aries and LHA Aries} 
+\newpage
 
-Find GHA Aries on 4 October 2022 at 7h 57m 20s. Also find LHA Aries longitude in \asm{.8} ($14\degree\, 34'\,12''$ E as before).
+\section{Use as \emph{Sight Reduction Table}} 
 
-\begin{center}
-\begin{tabular}{c|c|r|l|l}
-Data       & Format      & Key  &Display shows&Meaning\\
-\hline
-\asm{2022} &  $YYYY$   & ENTER &\asm{2022.0000}& Year\\
-\asm{10} &  $mm$   & ENTER &\asm{10.0000} & Month\\
-\asm{4} &  $dd$   & f \asm{\textbf{A}} &\asm{12.4006} &$12\degree\, 40'\,6''$, GHA Aries at 0h\\
-\asm{7.5720} &  $hh.mmss$   & f \asm{\textbf{E}} &\asm{132.1942} & GHA Aries = $132\degree\, 19'\,42''$ \\
-&    &  \asm{\textbf{x$\leftrightarrow$y}} &\asm{146.5354} & LHA Aries = $146\degree\, 53'\,54''$ \\
-\end{tabular}
-\end{center}
-
-\section*{Use as \emph{Sight Reduction Table}} 
-
-The program can also solve the navigational triangle and be used as a  \emph{Sight Reduction Table} replacement (Ho-214/Ho-229~etc). To solve the triangle  1) AP latitude, 2) object's declination and 3) hour angle need to be entered.
+The program can also solve the navigational triangle and be used as a (Ho-214/Ho-229 etc) \emph{Sight Reduction Table} replacement. To solve the triangle  AP latitude, object's declination and hour angle needs to be entered.
 
 AP latitude is entered in register \asm{8} as before, declination is set via \textbf{\textsf{C}} and hour angle is entered into register \asm{.2}. The hour angle is positive if westward.
 
-\startex{Find Hc and Az as in Ho-214} Assume latitude N$58\degree$, Declination $8\degree\, 30'$ and an hour angle of $54\degree$ (object to the west of observer).
+\startex{Find Hc and Az as in Ho-214} Assume longitude $58\degree$~N, Declination $8\degree\, 30'$ and an hour angle of $54\degree$ (object to the west of observer).
 
-\begin{center}
-\begin{tabular}{c|c|r|l|l}
-Data       & Format      & Key  &Display shows&Meaning\\
+\begin{tabular}{ccr|lc}
+Data       & Format      & Key & Display shows\\
 \hline
-\asm{58} &  $dd.mmss$   & \asm{STO 8} &\asm{58.0000}& Decimal latitude \\
-\asm{8.3000} &  $dd.mmss$   & \textbf{\textsf{C}} &\asm{8.5000}& Decimal declination\\
-\asm{54}     &  $dd.mmss$   & g$\rightarrow$H & \asm{54.0000} & Decimal Hour angle\\
+\asm{58} &  $dd.mmss$   & \asm{STO 8} &\asm{58.0000}\\
+\asm{8.3000} &  $dd.mmss$   & \textbf{\textsf{C}} &\asm{8.5000}\\
+\asm{54}     &  $dd.mmss$   & g ->H & \asm{54.0000}\\
              &              & \asm{STO .2} & \asm{54.0000}\\
-             &              & \asm{GSB 7} & \asm{25.4102} & Hc = $25\degree\, 41'\,02''$\\
-             &              &  \asm{\textbf{x$\leftrightarrow$y}} &\asm{242.3616} & Az = $242\degree\, 36'\,16''$ = 242.6\degree\\
+             &              & \asm{GSB 7} & \asm{25.4102} ( Hc = $25\degree\, 41'\,02''$)\\
+             &              &  \asm{\textbf{x<>y}} &\asm{242.3616} ( Az = $242\degree\, 36'\,16''$ = 242.60\degree)\\
 \end{tabular}
-\end{center}
 
 Ho-214 gives Alt. = $25\degree\, 41{\cdot}0'$ and  Az. = $117.4\degree$. Where true azimuth is $360-117.4=242.6\degree$. 
 
 
-\appendix
 
-\chapter{Program and information}
-\subsection*{Register usage}
+
+\section{Program and information}
+\subsection{Register usage}
 The lower registers \asm{r0..r7} are used by the calculator's statistics functions and are not \emph{permanently} used by this program. They \emph{are} used however for intermediate results via the normal operating sequences \textbf{\textsf{A-B}} or \textbf{\textsf{A-C-D}} or \textbf{\textsf{A-E}}.
 
 In short: Use \asm{r0..r7} as you wish but they will be altered by \textbf{\textsf{A}}.
 
-\subsection*{Program installation}
+\subsection{Program installation}
 
 For a fresh install of the program perform steps 1--6 below.
 
@@ -281,26 +301,23 @@ For a fresh install of the program perform steps 1--6 below.
  \item On device enable serial communication (hold C while pressing ON-button) 
  \item \textsf{File/Write DM15}
  \end{itemize}
- \item Before use enter the following constants constants into the respective registers:
+ \item Before use a number of constants must be entered in the following registers:
   
- \begin{center}
- \begin{tabular}{cll}
- Register & Constant & Meaning\\
+ \begin{tabular}{cl}
+ Register & Constant\\
  \hline
- \asm{.3} & \asm{\textbf{279.4055638}} & Longitude at epoch JD=2459944.5\\
- \asm{.4} &  \asm{\textbf{283.3328093}} & Longitude of perigee for epoch\\
- \asm{.5} &  \asm{\textbf{1.016860112}} & $\sqrt{\frac{1+e}{1-e}}$\\
- \asm{.6} &  \asm{\textbf{23.44188400}} & Ecliptic obliquity\\
- \asm{.7} &  \asm{\textbf{0.002737909}} & $\frac{1}{365.2422}$\\
- 
- 
+ \asm{.3} & \asm{\textbf{279.4055638}}\\
+ \asm{.4} &  \asm{\textbf{283.3328093}}\\
+ \asm{.5} &  \asm{\textbf{1.016860112}}\\
+ \asm{.6} &  \asm{\textbf{23.44188400}}\\
+ \asm{.7} &  \asm{\textbf{0.002737909}}, (1/365.2422)\\
+ \hline
  \end{tabular}
- \end{center}
  
- \item That's it. Now the samples in this document give expected results.
+ \item That's it. Now the samples in this document should give the expected results.
 \end{enumerate}
 
-\subsection*{Program listing}
+\subsection{Program listing}
 
 \lstset{basicstyle=\fontsize{10}{10}\selectfont\ttfamily, tabsize=4}
 Note: In the listing below some minor self explanatory key appearances have changed.  \asm{SIN}$^{-1}$ is replaced with \asm{ASIN} etc, \asm{x}$\leftrightarrow$\asm{y} is \asm{x<>y} and \asm{R}$\downarrow$ is \asm{Rv}.
@@ -357,266 +374,311 @@ Note: In the listing below some minor self explanatory key appearances have chan
    048 {           4 } 4
    049 {          10 } /
    050 {          40 } +
-   051 {    32 48  0 } GSB .0
-   052 {          20 } *
-   053 {    45 48  3 } RCL .3
-   054 {          40 } +
-   055 {    45 48  4 } RCL .4
-   056 {          30 } -
-   057 {       42  3 } f -> RAD
-   058 {       44  9 } STO 9
-   059 {       43  8 } g RAD
-   060 {          36 } ENTER
-   061 {           1 } 1
-   062 {           0 } 0
-   063 {    42  7  9 } f FIX 9
-   064 {    42 10  8 } f SOLVE 8
-   065 {    42  7  4 } f FIX 4
-   066 {           2 } 2
-   067 {          10 } /
-   068 {          25 } TAN
-   069 {    45 48  5 } RCL .5
-   070 {          20 } *
-   071 {       43 25 } g ATAN
-   072 {           2 } 2
-   073 {          20 } *
-   074 {       43  3 } g ->DEG
-   075 {       43  7 } g DEG
-   076 {    45 48  4 } RCL .4
-   077 {          40 } +
-   078 {    44 48  0 } STO .0
-   079 {    45 48  0 } RCL .0
-   080 {          23 } SIN
-   081 {    45 48  6 } RCL .6
-   082 {          24 } COS
-   083 {          20 } *
-   084 {    45 48  0 } RCL .0
-   085 {          24 } COS
-   086 {       43  1 } g ->P
-   087 {          33 } Rv
-   088 {       44  9 } STO 9
-   089 {    45 48  0 } RCL .0
-   090 {          23 } SIN
-   091 {    45 48  6 } RCL .6
+   051 {    45 48  7 } RCL .7
+   052 {    32 48  8 } GSB .8
+   053 {          20 } *
+   054 {          20 } *
+   055 {    45 48  3 } RCL .3
+   056 {          40 } +
+   057 {    45 48  4 } RCL .4
+   058 {          30 } -
+   059 {       42  3 } f ->RAD
+   060 {       44  9 } STO 9
+   061 {       43  8 } g RAD
+   062 {          36 } ENTER
+   063 {           1 } 1
+   064 {           0 } 0
+   065 {    42  7  9 } f FIX 9
+   066 {    42 10  8 } f SOLVE 8
+   067 {    42  7  4 } f FIX 4
+   068 {           2 } 2
+   069 {          10 } /
+   070 {          25 } TAN
+   071 {    45 48  5 } RCL .5
+   072 {          20 } *
+   073 {       43 25 } g ATAN
+   074 {           2 } 2
+   075 {          20 } *
+   076 {       43  3 } g ->DEG
+   077 {       43  7 } g DEG
+   078 {    45 48  4 } RCL .4
+   079 {          40 } +
+   080 {    44 48  0 } STO .0
+   081 {    45 48  0 } RCL .0
+   082 {          23 } SIN
+   083 {    45 48  6 } RCL .6
+   084 {          24 } COS
+   085 {          20 } *
+   086 {    45 48  0 } RCL .0
+   087 {          24 } COS
+   088 {       43  1 } g ->P
+   089 {          33 } Rv
+   090 {       44  9 } STO 9
+   091 {    45 48  0 } RCL .0
    092 {          23 } SIN
-   093 {          20 } *
-   094 {       43 23 } g ASIN
-   095 {    44 48  0 } STO .0
-   096 {       45  9 } RCL 9
-   097 { 42 21 48  1 } f LBL .1
-   098 {       45  5 } RCL 5
-   099 {    32 48  8 } GSB .8
-   100 {       45  9 } RCL 9
-   101 {          30 } -
-   102 {          40 } +
-   103 {       32  2 } GSB 2
-   104 {    44 48  2 } STO .2
-   105 {       32  7 } GSB 7
-   106 {       43 32 } g RTN
-   107 {    42 21  7 } f LBL 7
-   108 {    45 48  2 } RCL .2
-   109 {          24 } COS
-   110 {       45  8 } RCL 8
-   111 {    45 48  0 } RCL .0
-   112 {       32  5 } GSB 5
-   113 {          20 } *
-   114 {    45 48  0 } RCL .0
-   115 {       45  8 } RCL 8
-   116 {       32  4 } GSB 4
-   117 {          40 } +
-   118 {       43 23 } g ASIN
-   119 {          36 } ENTER
-   120 {          36 } ENTER
-   121 {    44 48  1 } STO .1
-   122 {       45  8 } RCL 8
-   123 {       32  4 } GSB 4
-   124 {          16 } CHS
-   125 {    45 48  0 } RCL .0
-   126 {          23 } SIN
-   127 {          40 } +
-   128 {          34 } x<>y
-   129 {       45  8 } RCL 8
-   130 {       32  5 } GSB 5
-   131 {          10 } /
-   132 {       43 24 } g ACOS
-   133 { 42  4 48  2 } f x<> .2
-   134 {          23 } SIN
-   135 {    43 30  2 } g TEST x<0
-   136 {       22  6 } GTO 6
-   137 {    32 48  8 } GSB .8
-   138 {    45 48  2 } RCL .2
-   139 {          30 } -
-   140 {    44 48  2 } STO .2
-   141 {    42 21  6 } f LBL 6
-   142 {    45 48  1 } RCL .1
-   143 {    45 48  2 } RCL .2
-   144 {       22  9 } GTO 9
-   145 {    42 21  8 } f LBL 8
-   146 {          23 } SIN
-   147 {          48 } .
-   148 {           0 } 0
-   149 {           1 } 1
-   150 {           6 } 6
-   151 {           7 } 7
-   152 {           1 } 1
-   153 {           8 } 8
-   154 {          20 } *
-   155 {          16 } CHS
-   156 {          40 } +
-   157 {       45  9 } RCL 9
-   158 {          30 } -
-   159 {       43 32 } g RTN
-   160 {    42 21 13 } f LBL C
-   161 {       43  2 } g ->H
-   162 {    44 48  0 } STO .0
-   163 {          33 } Rv
-   164 {       43  2 } g ->H
-   165 {    32 48  8 } GSB .8
-   166 {          34 } x<>y
-   167 {          30 } -
-   168 {       44  9 } STO 9
-   169 {       43 32 } g RTN
-   170 {    42 21 15 } f LBL E
-   171 {       43  2 } g ->H
-   172 {       44  4 } STO 4
-   173 {    45 48  7 } RCL .7
-   174 {           1 } 1
-   175 {          40 } +
-   176 {          20 } *
-   177 {    32 48  2 } GSB .2
-   178 {       45  1 } RCL 1
-   179 {          40 } +
-   180 {          36 } ENTER
-   181 {          36 } ENTER
-   182 {    45 48  8 } RCL .8
-   183 {          40 } +
-   184 {       32  2 } GSB 2
-   185 {       44  5 } STO 5
-   186 {          34 } x<>y
-   187 {       32  2 } GSB 2
+   093 {    45 48  6 } RCL .6
+   094 {          23 } SIN
+   095 {          20 } *
+   096 {       43 23 } g ASIN
+   097 {    44 48  0 } STO .0
+   098 {       45  9 } RCL 9
+   099 { 42 21 48  1 } f LBL .1
+   100 {       45  5 } RCL 5
+   101 {    32 48  8 } GSB .8
+   102 {       45  9 } RCL 9
+   103 {          30 } -
+   104 {          40 } +
+   105 {       32  2 } GSB 2
+   106 {    44 48  2 } STO .2
+   107 {       32  7 } GSB 7
+   108 {       43 32 } g RTN
+   109 {    42 21  7 } f LBL 7
+   110 {    45 48  2 } RCL .2
+   111 {          24 } COS
+   112 {       45  8 } RCL 8
+   113 {    45 48  0 } RCL .0
+   114 {       32  5 } GSB 5
+   115 {          20 } *
+   116 {    45 48  0 } RCL .0
+   117 {       45  8 } RCL 8
+   118 {       32  4 } GSB 4
+   119 {          40 } +
+   120 {       43 23 } g ASIN
+   121 {          36 } ENTER
+   122 {          36 } ENTER
+   123 {    44 48  1 } STO .1
+   124 {       45  8 } RCL 8
+   125 {       32  4 } GSB 4
+   126 {          16 } CHS
+   127 {    45 48  0 } RCL .0
+   128 {          23 } SIN
+   129 {          40 } +
+   130 {          34 } x<>y
+   131 {       45  8 } RCL 8
+   132 {       32  5 } GSB 5
+   133 {          10 } /
+   134 {       43 24 } g ACOS
+   135 { 42  4 48  2 } f X<>.2
+   136 {          23 } SIN
+   137 {    43 30  2 } g TEST x<0
+   138 {       22  6 } GTO 6
+   139 {    32 48  8 } GSB .8
+   140 {    45 48  2 } RCL .2
+   141 {          30 } -
+   142 {    44 48  2 } STO .2
+   143 {    42 21  6 } f LBL 6
+   144 {    45 48  1 } RCL .1
+   145 {    45 48  2 } RCL .2
+   146 {       22  9 } GTO 9
+   147 {    42 21  8 } f LBL 8
+   148 {          23 } SIN
+   149 {          48 } .
+   150 {           0 } 0
+   151 {           1 } 1
+   152 {           6 } 6
+   153 {           7 } 7
+   154 {           1 } 1
+   155 {           8 } 8
+   156 {          20 } *
+   157 {          16 } CHS
+   158 {          40 } +
+   159 {       45  9 } RCL 9
+   160 {          30 } -
+   161 {       43 32 } g RTN
+   162 {    42 21 13 } f LBL C
+   163 {       43  2 } g ->H
+   164 {    44 48  0 } STO .0
+   165 {          33 } Rv
+   166 {       43  2 } g ->H
+   167 {    32 48  8 } GSB .8
+   168 {          34 } x<>y
+   169 {          30 } -
+   170 {       44  9 } STO 9
+   171 {       43 32 } g RTN
+   172 {    42 21 15 } f LBL E
+   173 {       43  2 } g ->H
+   174 {       44  4 } STO 4
+   175 {    45 48  7 } RCL .7
+   176 {           1 } 1
+   177 {          40 } +
+   178 {          20 } *
+   179 {    32 48  2 } GSB .2
+   180 {       45  1 } RCL 1
+   181 {          40 } +
+   182 {          36 } ENTER
+   183 {          36 } ENTER
+   184 {    45 48  8 } RCL .8
+   185 {          40 } +
+   186 {       32  2 } GSB 2
+   187 {       44  5 } STO 5
    188 {          34 } x<>y
-   189 {    42 21  9 } f LBL 9
-   190 {       42  2 } f ->H.MS
-   191 {          34 } x<>y
+   189 {       32  2 } GSB 2
+   190 {          34 } x<>y
+   191 {    42 21  9 } f LBL 9
    192 {       42  2 } f ->H.MS
-   193 {       43 32 } g RTN
-   194 {    42 21  0 } f LBL 0
-   195 {           1 } 1
-   196 {          36 } ENTER
-   197 {           0 } 0
-   198 {       32  1 } GSB 1
-   199 {           2 } 2
-   200 {           4 } 4
-   201 {           1 } 1
-   202 {           5 } 5
-   203 {           0 } 0
-   204 {           2 } 2
+   193 {          34 } x<>y
+   194 {       42  2 } f ->H.MS
+   195 {       43 32 } g RTN
+   196 {    42 21  0 } f LBL 0
+   197 {           1 } 1
+   198 {          36 } ENTER
+   199 {           0 } 0
+   200 {       32  1 } GSB 1
+   201 {           2 } 2
+   202 {           4 } 4
+   203 {           1 } 1
+   204 {           5 } 5
    205 {           0 } 0
-   206 {          30 } -
-   207 {    32 48  0 } GSB .0
-   208 {          20 } *
-   209 {           9 } 9
-   210 {           9 } 9
-   211 {          48 } .
-   212 {           4 } 4
-   213 {           1 } 1
-   214 {           3 } 3
-   215 {       43  2 } g ->H
-   216 {          40 } +
-   217 {       32  2 } GSB 2
-   218 {       44  3 } STO 3
-   219 {       45  6 } RCL 6
-   220 {       44  0 } STO 0
-   221 {       43 32 } g RTN
-   222 {    42 21 11 } f LBL A
-   223 {       44  4 } STO 4
-   224 {          33 } Rv
-   225 {       44  5 } STO 5
-   226 {          33 } Rv
-   227 {       32  0 } GSB 0
-   228 {       45  1 } RCL 1
-   229 {       45  5 } RCL 5
-   230 {       45  4 } RCL 4
-   231 {       32  1 } GSB 1
-   232 {       45  0 } RCL 0
-   233 {          30 } -
-   234 {    32 48  0 } GSB .0
-   235 {          20 } *
-   236 {       45  3 } RCL 3
-   237 {          40 } +
-   238 {       32  2 } GSB 2
-   239 {       44  1 } STO 1
-   240 {       42  2 } f ->H.MS
-   241 {       43 32 } g RTN
-   242 {    42 21  1 } f LBL 1
-   243 {           1 } 1
-   244 {           7 } 7
-   245 {           2 } 2
-   246 {           1 } 1
-   247 {           0 } 0
-   248 {           1 } 1
-   249 {           3 } 3
-   250 {          48 } .
-   251 {           5 } 5
-   252 {          40 } +
-   253 {          34 } x<>y
-   254 {       44  1 } STO 1
-   255 {           2 } 2
-   256 {           7 } 7
-   257 {           5 } 5
-   258 {          20 } *
-   259 {           9 } 9
-   260 {          10 } /
-   261 {       43 44 } g INT
-   262 {          40 } +
-   263 {          34 } x<>y
-   264 {          36 } ENTER
-   265 {    42  4  1 } f x<> 1
-   266 {           9 } 9
-   267 {          40 } +
-   268 {           1 } 1
-   269 {           2 } 2
-   270 {          10 } /
-   271 {       43 44 } g INT
-   272 {          40 } +
-   273 {           7 } 7
-   274 {          20 } *
-   275 {           4 } 4
-   276 {          10 } /
-   277 {       43 44 } g INT
-   278 {          16 } CHS
-   279 {          40 } +
-   280 {       45  1 } RCL 1
-   281 {           3 } 3
-   282 {           6 } 6
-   283 {           7 } 7
-   284 {          20 } *
-   285 {          40 } +
-   286 {       44  6 } STO 6
-   287 {       43 32 } g RTN
-   288 {    42 21 14 } f LBL D
-   289 {       32 15 } GSB E
-   290 {    32 48  1 } GSB .1
-   291 {       43 32 } g RTN
-   292 { 42 21 48  5 } f LBL .5
-   293 {       45  5 } RCL 5
-   294 {    45 48  8 } RCL .8
-   295 {          30 } -
-   296 {    32 48  8 } GSB .8
-   297 {       45  9 } RCL 9
-   298 {          30 } -
-   299 {          40 } +
-   300 {       32  2 } GSB 2
-   301 {    45 48  0 } RCL .0
-   302 {       22  9 } GTO 9
-   303 { 42 21 48  0 } f LBL .0
-   304 {    45 48  7 } RCL .7
-   305 {    32 48  8 } GSB .8
-   306 {          20 } *
-   307 {       43 32 } g RTN 
+   206 {           2 } 2
+   207 {           0 } 0
+   208 {          30 } -
+   209 {           3 } 3
+   210 {           6 } 6
+   211 {           5 } 5
+   212 {           2 } 2
+   213 {           5 } 5
+   214 {          10 } /
+   215 {          36 } ENTER
+   216 {          36 } ENTER
+   217 {          48 } .
+   218 {           0 } 0
+   219 {           0 } 0
+   220 {           0 } 0
+   221 {           0 } 0
+   222 {           2 } 2
+   223 {           5 } 5
+   224 {           8 } 8
+   225 {           1 } 1
+   226 {          20 } *
+   227 {           2 } 2
+   228 {           4 } 4
+   229 {           0 } 0
+   230 {           0 } 0
+   231 {          48 } .
+   232 {           0 } 0
+   233 {           5 } 5
+   234 {           1 } 1
+   235 {           2 } 2
+   236 {           6 } 6
+   237 {           2 } 2
+   238 {          40 } +
+   239 {          20 } *
+   240 {           6 } 6
+   241 {          48 } .
+   242 {           6 } 6
+   243 {           4 } 4
+   244 {           6 } 6
+   245 {           0 } 0
+   246 {           6 } 6
+   247 {           5 } 5
+   248 {           6 } 6
+   249 {          40 } +
+   250 {    32 48  2 } GSB .2
+   251 {       32  2 } GSB 2
+   252 {       44  3 } STO 3
+   253 {       45  6 } RCL 6
+   254 {       44  0 } STO 0
+   255 {       43 32 } g RTN
+   256 {    42 21 11 } f LBL A
+   257 {       44  4 } STO 4
+   258 {          33 } Rv
+   259 {       44  5 } STO 5
+   260 {          33 } Rv
+   261 {       32  0 } GSB 0
+   262 {       45  1 } RCL 1
+   263 {       45  5 } RCL 5
+   264 {       45  4 } RCL 4
+   265 {       32  1 } GSB 1
+   266 {       45  0 } RCL 0
+   267 {          30 } -
+   268 {    45 48  7 } RCL .7
+   269 {    32 48  8 } GSB .8
+   270 {          20 } *
+   271 {          20 } *
+   272 {       45  3 } RCL 3
+   273 {          40 } +
+   274 {       32  2 } GSB 2
+   275 {       44  1 } STO 1
+   276 {       42  2 } f ->H.MS
+   277 {       43 32 } g RTN
+   278 {    42 21  1 } f LBL 1
+   279 {           1 } 1
+   280 {           7 } 7
+   281 {           2 } 2
+   282 {           1 } 1
+   283 {           0 } 0
+   284 {           1 } 1
+   285 {           3 } 3
+   286 {          48 } .
+   287 {           5 } 5
+   288 {          40 } +
+   289 {          34 } x<>y
+   290 {       44  1 } STO 1
+   291 {           2 } 2
+   292 {           7 } 7
+   293 {           5 } 5
+   294 {          20 } *
+   295 {           9 } 9
+   296 {          10 } /
+   297 {       43 44 } g INT
+   298 {          40 } +
+   299 {          34 } x<>y
+   300 {          36 } ENTER
+   301 {    42  4  1 } f X<>1
+   302 {           9 } 9
+   303 {          40 } +
+   304 {           1 } 1
+   305 {           2 } 2
+   306 {          10 } /
+   307 {       43 44 } g INT
+   308 {          40 } +
+   309 {           7 } 7
+   310 {          20 } *
+   311 {           4 } 4
+   312 {          10 } /
+   313 {       43 44 } g INT
+   314 {          16 } CHS
+   315 {          40 } +
+   316 {       45  1 } RCL 1
+   317 {           3 } 3
+   318 {           6 } 6
+   319 {           7 } 7
+   320 {          20 } *
+   321 {          40 } +
+   322 {       44  6 } STO 6
+   323 {       43 32 } g RTN
+   324 {    42 21 14 } f LBL D
+   325 {       32 15 } GSB E
+   326 {    32 48  1 } GSB .1
+   327 {       43 32 } g RTN
+   328 { 42 21 48  5 } f LBL .5
+   329 {       45  5 } RCL 5
+   330 {    45 48  8 } RCL .8
+   331 {          30 } -
+   332 {    32 48  8 } GSB .8
+   333 {       45  9 } RCL 9
+   334 {          30 } -
+   335 {          40 } +
+   336 {       32  2 } GSB 2
+   337 {    45 48  0 } RCL .0
+   338 {       22  9 } GTO 9
+   339 { 42 21 48  0 } f LBL .0
+   340 {       32 15 } GSB E
+   341 {       43  2 } g ->H
+   342 {       43 33 } g R^
+   343 {       43  2 } g ->H
+   344 {          34 } x<>y
+   345 {          30 } -
+   346 {       42  2 } f ->H.MS
+   347 {          31 } R/S
+   348 {       32 13 } GSB C
+   349 {       45  4 } RCL 4
+   350 {       42  2 } f ->H.MS
+   351 {       32 14 } GSB D
+   352 {       43 32 } g RTN
 \end{lstlisting}
 \end{multicols}
 
-\includepdf[pages={1-5}, scale=0.9]{Astro_2023_bw.pdf}
+%\includepdf[pages={1-5}, scale=0.9]{Astro_2023_bw.pdf}
 \end{document}
 
