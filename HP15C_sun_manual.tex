@@ -1,4 +1,4 @@
-\documentclass[english,a4paper,onepage, 12pt]{scrbook}
+\documentclass[english,a4paper,onepage, 10pt]{scrbook}
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -87,7 +87,7 @@ Before use, notice that:
 
 \section{Public routines} 
 
-Full use of the program entails the following routines. Their use is described in this document. 
+Full use of the program entails the following routines where \textbf{\textsf{A--E}} are main functionality and \textbf{\textsf{.0, 4, 5, 9}} are utilities. Their use is described in this document. 
 
 \begin{center}
 \begin{tabular}{ll}
@@ -98,10 +98,15 @@ Button & Function \\
 \textbf{\textsf{C}} & SHA and declination for \emph{own object} \\
 \textbf{\textsf{D}} & GMT $\rightarrow$ \emph{own object}'s Altitude and Azimuth \\
 \textbf{\textsf{E}} & GMT $\rightarrow$ GHA \Aries\, and LHA \Aries\,\\
+
 \textbf{\textsf{.0}} & GHA, time and declination $\rightarrow$ Altitude and Azimuth\\
+\textbf{\textsf{.4}} & GHA, $\delta T$, \emph{v}  $\rightarrow$ GHA for newtime\\
 
 \textbf{\textsf{.5}} & After \textbf{\textsf{B}} $\rightarrow$ GHA and declination\\
+
 & (mimicks a \emph{Nautical Almanac} entry)\\
+\textbf{\textsf{.9}} & True altitude $\rightarrow$ Apparent Altitude\\
+
 \end{tabular}
 \end{center}
 
@@ -226,7 +231,48 @@ Data       & Format      & Key & Display shows\\
 &    &  \asm{\textbf{x<>y}} &\asm{146.5354} ( LHA \Aries\, = $146\degree\, 53'\,54''$ )\\
 \end{tabular}
 
-\section{GHA and Declination $\rightarrow$ Altitude and Azimuth} 
+\section{.4, GHA, $\Delta T$, \emph{v}  $\rightarrow$ GHA for time $+\Delta T$} 
+
+This routine replaces the GHA part of the \emph{Sun and Planets}-section\footnote{Will not work for Moon or Aries.} of \textsc{Increments and Corrections} as found in the \emph{Nautical Almanac}. It (linearly) interpolates a future GHA given 
+
+\begin{itemize}
+\item a current GHA, 
+\item a time difference from this GHA and 
+\item \emph{v} as read from the \emph{Nautical Almanac}.
+\end{itemize}
+
+\startex{Given that the GHA is $110\degree\, 34{\cdot}3'$ at 17h. What is the GHA at 17h 23m 47s? \emph{v}-value is 2.4 as read from the NA.}
+
+\begin{tabular}{rcr|lc}
+Data       & Format      & Key & Display shows\\
+\hline
+\asm{110.3418} &  $ddd.mmss$   & ENTER &\asm{110.3418}\\
+\asm{0.2347} &  $hh.mmss$   & ENTER &\asm{0.2347}\\
+\asm{2.4} &  $min.tenths$   & \asm{\textbf{GSB .4}} &\asm{116.3200} ($116\degree\, 32'\,00''$, GHA at 17h 23m 47s)\\
+\end{tabular}
+
+\section{.3, Declination, $\Delta T$, \emph{d}  $\rightarrow$ Declination for time $+\Delta T$} 
+
+This routine replaces the \emph{d-corr} part of \textsc{Increments and Corrections} as found in the \emph{Nautical Almanac}. It (linearly) interpolates a future Declination given 
+
+\begin{itemize}
+\item a current declination at time $T$, 
+\item a time difference, $\Delta T$, from this and 
+\item \emph{d} as read from the \emph{Nautical Almanac}.
+\end{itemize}
+XXX
+%\startex{Given that the GHA is $110\degree\, 34{\cdot}3'$ at 17h. What is the GHA at 17h 23m 47s? \emph{v}-value is 2.4 as read from the NA.}
+%
+%\begin{tabular}{rcr|lc}
+%Data       & Format      & Key & Display shows\\
+%\hline
+%\asm{110.3418} &  $ddd.mmss$   & ENTER &\asm{110.3418}\\
+%\asm{0.2347} &  $hh.mmss$   & ENTER &\asm{0.2347}\\
+%\asm{2.4} &  $min.tenths$   & \asm{\textbf{GSB .4}} &\asm{116.3200} ($116\degree\, 32'\,00''$, GHA at 17h 23m 47s)\\
+%\end{tabular}
+
+
+\section{.0, GHA and Declination $\rightarrow$ Altitude and Azimuth} 
 
 When coordinates are given as GHA (\emph{Greenwich Hour Angle}) and Declination, as is the case for the planets and Moon listed in NA,  proceed as follows. As GHA changes continuously during the day a time is also required.
 
@@ -244,9 +290,32 @@ Data       & Format      & Key & Display shows\\
 \end{tabular}
 
 \textbf{Result:} The \emph{Sun} is expected at a height of $52\degree\, 54{\cdot}9'$ and in a direction of $156\degree$.\footnote{Compare these results with the direct method above ($52\degree\, 54'\,55''$ vs $52\degree\, 55'\,08''$ and $156\degree\, 08'\,16''$ vs $156\degree\, 08'\,21''$). Pretty close but not exactly the same. }
-\slutex
 
-\newpage
+
+\section{.9, True Altitude $\rightarrow$ Apparent Altitude} 
+
+
+The calculated altitude of any object is the True Altitude. Due to refraction the object will appear at a slightly higher altitude, its Apparent Altitude. This routine adds the correct small amount of refraction correction.\footnote{S\ae mann's formula is used.}
+
+\startex{Calculated altitude of a star is $17\degree\, 45'\,00''$. What is the star's Apparent Altitude?}
+
+\begin{tabular}{ccr|lc}
+Data       & Format      & Key & Display shows\\
+\asm{17.4500} &  $ddd.mmss$   & \asm{GSB .9} &\asm{17.4806} $H_{app}$ = $17\degree\, 48'\,06''$ &\\
+              &  $$   & \asm{x<>y} &\asm{0.0306}, the increment added, $03'\,06''$&\\
+\end{tabular}
+
+\textbf{Note:} With negligible error this routine can also be used to find the refraction correction as in \textsc{altitude correction tables} in \emph{Nautical Almanac}. 
+
+\startex{Measured altitude of a star is $17\degree\, 48'\,06''$. What is the star's True Altitude? (Inverse example of above)}
+
+\begin{tabular}{ccr|lc}
+Data       & Format      & Key & Display shows\\
+\asm{17.4806} &  $ddd.mmss$   & \asm{GSB .9} &\asm{17.5112}, ignore result &\\
+              &  $$   & \asm{x<>y} &\asm{0.0306}, the increment to subtract, $03'\,06''$&\\
+\end{tabular}
+
+This value matches closely the \emph{Nautical Almanac}'s value of $-03'$.
 
 \section{Use as \emph{Sight Reduction Table}} 
 
