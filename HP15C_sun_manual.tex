@@ -10,6 +10,7 @@
 \setlength{\unitlength}{1cm}
 \addtolength{\textheight}{2cm}
 \usepackage{multicol}
+\usepackage{lscape}
 
 \usepackage{graphicx}
 \usepackage{ae}
@@ -755,7 +756,32 @@ Note: In the listing below some minor self explanatory key appearances have chan
    352 {       43 32 } g RTN
 \end{lstlisting}
 \end{multicols}
+\newpage
+\appendix
+\begin{landscape}
+\Large
 
+\section*{Short summary}
+\begin{tabular}{rcl}
+ Format & Button  &Function \\
+\hline
+
+$YYYY\,\, MM\, DD$             & \textbf{\textsf{A}} & Initialize with date\\
+$hh.mmss$                & \textbf{\textsf{B}} & Get Sun's Altitude for Time, x<>y Azimuth\\
+$ddd.mmss$ $\pm decl$ & \textbf{\textsf{C}} & Enter own objects coordinates\\
+$hh.mmss$                & \textbf{\textsf{D}} & Own object's Altitude for Time, x<>y Azimuth\\
+ $hh.mmss$                & \textbf{\textsf{E}} & GHA \Aries\,, x<>y for LHA \Aries\,\\
+\hline
+ $ddd.mmss$ $hh.mmss$   & \textbf{\textsf{GSB .0}} & GHA, x<>y for Azimuth of Sun\\
+  $dd.mmss$    & \textbf{\textsf{R/S}}  &Object's Altitude for Time, x<>y Azimuth\\
+\hline
+ $\pm dd.mmss$ $0.mmss$  $d$  & \textbf{\textsf{GSB .3}} & Decl for Time \\
+  $\pm ddd.mmss$ $0.mmss$  $v$  & \textbf{\textsf{GSB .4}} & GHA for Time \\
+
+  After \textbf{\textsf{A}}   & \textbf{\textsf{GSB .5}} & Sun's GHA, x<>y Declination\\
+ $dd.mmss$  & \textbf{\textsf{GSB .9}} & Apparent altitude, x<>y refr corr$^n$ used (in ')\\
+\end{tabular}
+\end{landscape}
 %\includepdf[pages={1-5}, scale=0.9]{Astro_2023_bw.pdf}
 \end{document}
 
