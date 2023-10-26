@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.11.28)  26 OCT 2023 21:54
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.11.28)  26 OCT 2023 21:56
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -748,34 +748,34 @@ Overfull \hbox (34.30602pt too wide) in paragraph at lines 250--256
  []
 
 LaTeX Font Info:    Font shape `T1/pag/b/sc' in size <14.4> not available
-(Font)              Font shape `T1/pag/db/sc' tried instead on input line 257.
+(Font)              Font shape `T1/pag/db/sc' tried instead on input line 258.
 
-Overfull \hbox (34.30602pt too wide) in paragraph at lines 266--272
+Overfull \hbox (34.30602pt too wide) in paragraph at lines 267--273
 [][] 
  []
 
 [8]
 LaTeX Font Info:    Font shape `T1/pag/b/it' in size <14.4> not available
-(Font)              Font shape `T1/pag/db/it' tried instead on input line 324.
+(Font)              Font shape `T1/pag/db/it' tried instead on input line 325.
 LaTeX Font Info:    Font shape `T1/pag/db/it' in size <14.4> not available
-(Font)              Font shape `T1/pag/db/sl' tried instead on input line 324.
+(Font)              Font shape `T1/pag/db/sl' tried instead on input line 325.
  [9] [10] [11] [12] [13] [14]
 LaTeX Font Info:    Font shape `T1/pbk/b/n' in size <14.4> not available
-(Font)              Font shape `T1/pbk/db/n' tried instead on input line 764.
+(Font)              Font shape `T1/pbk/db/n' tried instead on input line 765.
  [15
 
 ]
 
 LaTeX3 Info: Redefining command \BeforeClosingMainAux with sig. 'm' on line
-(LaTeX3)     781.
+(LaTeX3)     782.
 
 
 LaTeX3 Info: Redefining command \BeforeClosingMainAux with sig. 'm' on line
-(LaTeX3)     781.
+(LaTeX3)     782.
 
 
 LaTeX3 Info: Redefining command \BeforeClosingMainAux with sig. 'm' on line
-(LaTeX3)     781.
+(LaTeX3)     782.
 
  (./HP15C_sun_manual.aux) ) 
 Here is how much of TeX's memory you used:
