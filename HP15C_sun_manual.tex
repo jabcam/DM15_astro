@@ -88,7 +88,7 @@ Before use, notice that:
 
 \section{Public routines} 
 
-Full use of the program entails the following routines where \textbf{\textsf{A--E}} are main functionality and \textbf{\textsf{.0, 4, 5, 9}} are utilities. Their use is described in this document. 
+Full use of the program entails the following routines where \textbf{\textsf{A--E}} are main functionality and \textbf{\textsf{.0, 3, 4, 5, 9}} are helpers. Their use is described in this document. 
 
 \begin{center}
 \begin{tabular}{ll}
@@ -101,7 +101,9 @@ Button & Function \\
 \textbf{\textsf{E}} & GMT $\rightarrow$ GHA \Aries\, and LHA \Aries\,\\
 
 \textbf{\textsf{.0}} & GHA, time and declination $\rightarrow$ Altitude and Azimuth\\
-\textbf{\textsf{.4}} & GHA, $\delta T$, \emph{v}  $\rightarrow$ GHA for newtime\\
+\textbf{\textsf{.3}} & Calculate average or mid time between two times or angles\\
+\textbf{\textsf{.4}} & Increments and Corrections for any object \\
+                     & given data from \emph{Nautical Almanac}\\
 
 \textbf{\textsf{.5}} & After \textbf{\textsf{B}} $\rightarrow$ GHA and declination\\
 
@@ -245,7 +247,6 @@ Data       & Format      & Key & Display shows\\
 \end{tabular}
 
 The routine also works for angles $ddd.mmss$.
-
 
 \begin{tabular}{ccr|ll}
 Data       & Format      & Key & Display shows\\
@@ -396,7 +397,13 @@ For a fresh install of the program perform steps 1--6 below.
 \lstset{basicstyle=\fontsize{10}{10}\selectfont\ttfamily, tabsize=4}
 Note: In the listing below some minor self explanatory key appearances have changed.  \asm{SIN}$^{-1}$ is replaced with \asm{ASIN} etc, \asm{x}$\leftrightarrow$\asm{y} is \asm{x<>y} and \asm{R}$\downarrow$ is \asm{Rv}.
 \begin{multicols}{2}
-\begin{lstlisting}
+\begin{lstlisting}  
+# ------------------------------------------------------------------------------
+# HEWLETT-PACKARD 15C Simulator program
+# Created with version 4.5.00
+# ------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+
    000 {             } 
    001 { 42 21 48  8 } f LBL .8
    002 {           3 } 3
@@ -456,7 +463,7 @@ Note: In the listing below some minor self explanatory key appearances have chan
    056 {          40 } +
    057 {    45 48  4 } RCL .4
    058 {          30 } -
-   059 {       42  3 } f ->RAD
+   059 {       42  3 } f->RAD
    060 {       44  9 } STO 9
    061 {       43  8 } g RAD
    062 {          36 } ENTER
@@ -532,7 +539,7 @@ Note: In the listing below some minor self explanatory key appearances have chan
    132 {       32  5 } GSB 5
    133 {          10 } /
    134 {       43 24 } g ACOS
-   135 { 42  4 48  2 } f X<>.2
+   135 { 42  4 48  2 } f X<> .2
    136 {          23 } SIN
    137 {    43 30  2 } g TEST x<0
    138 {       22  6 } GTO 6
@@ -698,7 +705,7 @@ Note: In the listing below some minor self explanatory key appearances have chan
    298 {          40 } +
    299 {          34 } x<>y
    300 {          36 } ENTER
-   301 {    42  4  1 } f X<>1
+   301 {    42  4  1 } f X<> 1
    302 {           9 } 9
    303 {          40 } +
    304 {           1 } 1
@@ -750,6 +757,57 @@ Note: In the listing below some minor self explanatory key appearances have chan
    350 {       42  2 } f ->H.MS
    351 {       32 14 } GSB D
    352 {       43 32 } g RTN
+   353 { 42 21 48  9 } f LBL .9
+   354 {       43  2 } g ->H
+   355 {          36 } ENTER
+   356 {          36 } ENTER
+   357 {          36 } ENTER
+   358 {           5 } 5
+   359 {          48 } .
+   360 {           1 } 1
+   361 {           1 } 1
+   362 {          40 } +
+   363 {           1 } 1
+   364 {           0 } 0
+   365 {          48 } .
+   366 {           3 } 3
+   367 {          34 } x<>y
+   368 {          10 } /
+   369 {          40 } +
+   370 {          25 } TAN
+   371 {          48 } .
+   372 {           0 } 0
+   373 {           1 } 1
+   374 {           7 } 7
+   375 {          34 } x<>y
+   376 {          10 } /
+   377 {          40 } +
+   378 {       43 36 } g LSTX
+   379 {       22  9 } GTO 9
+   380 { 42 21 48  4 } f LBL .4
+   381 {       43  2 } g ->H
+   382 {    22 48  7 } GTO .7
+   383 { 42 21 48  3 } f LBL .3
+   384 {          48 } .
+   385 {           5 } 5
+   386 { 42 21 48  7 } f LBL .7
+   387 {          33 } Rv
+   388 {       43  2 } g ->H
+   389 {          34 } x<>y
+   390 {       43  2 } g ->H
+   391 {          30 } -
+   392 {       43 33 } g R^
+   393 {       43 36 } g LSTX
+   394 {          33 } Rv
+   395 {          20 } *
+   396 {       43 33 } g R^
+   397 {          40 } +
+   398 {       42  2 } f ->H.MS
+   399 {       43 32 } g RTN
+
+# ------------------------------------------------------------------------------ 
+  
+  
 \end{lstlisting}
 \end{multicols}
 \newpage
@@ -762,17 +820,17 @@ Note: In the listing below some minor self explanatory key appearances have chan
  Format & Button  &Function \\
 \hline
 
-$YYYY\,\, MM\, DD$             & \textbf{\textsf{A}} & Initialize with date\\
+$YYYY\,\, MM\, DD$       & \textbf{\textsf{A}} & Initialize with date\\
 $hh.mmss$                & \textbf{\textsf{B}} & Get Sun's Altitude for Time, x<>y Azimuth\\
-$ddd.mmss$ $\pm decl$ & \textbf{\textsf{C}} & Enter own objects coordinates\\
+$ddd.mmss$ $\pm decl$    & \textbf{\textsf{C}} & Enter own objects coordinates\\
 $hh.mmss$                & \textbf{\textsf{D}} & Own object's Altitude for Time, x<>y Azimuth\\
- $hh.mmss$                & \textbf{\textsf{E}} & GHA \Aries\,, x<>y for LHA \Aries\,\\
+ $hh.mmss$               & \textbf{\textsf{E}} & GHA \Aries\,, x<>y for LHA \Aries\,\\
 \hline
- $ddd.mmss$ $hh.mmss$   & \textbf{\textsf{GSB .0}} & GHA, x<>y for Azimuth of Sun\\
-  $dd.mmss$    & \textbf{\textsf{R/S}}  &Object's Altitude for Time, x<>y Azimuth\\
+ $ddd.mmss$ $hh.mmss$    & \textbf{\textsf{GSB .0}} & GHA, x<>y for Azimuth of Sun\\
+ $dd.mmss$               & \textbf{\textsf{R/S}}  &Object's Altitude for Time, x<>y Azimuth\\
 \hline
- $\pm dd.mmss$ $0.mmss$  $d$  & \textbf{\textsf{GSB .3}} & Decl for Time \\
-  $\pm ddd.mmss$ $0.mmss$  $v$  & \textbf{\textsf{GSB .4}} & GHA for Time \\
+ $hh.mmss$ $hh.mmss$   & \textbf{\textsf{GSB .3}} & Average of two times \\
+ $ddd.mmss$ $ddd.mmss$ $0.mmss$   & \textbf{\textsf{GSB .4}} & Increments and Corrections\\
 
   After \textbf{\textsf{A}}   & \textbf{\textsf{GSB .5}} & Sun's GHA, x<>y Declination\\
  $dd.mmss$  & \textbf{\textsf{GSB .9}} & Apparent altitude, x<>y refr corr$^n$ used (in ')\\
