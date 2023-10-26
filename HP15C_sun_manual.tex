@@ -232,53 +232,48 @@ Data       & Format      & Key & Display shows\\
 &    &  \asm{\textbf{x<>y}} &\asm{146.5354} ( LHA \Aries\, = $146\degree\, 53'\,54''$ )\\
 \end{tabular}
 
-\section{.4, GHA, $\Delta T$, \emph{v}  $\rightarrow$ GHA for time $+\Delta T$} 
+\section{.3, Average of two times or angles} 
 
-This routine replaces the GHA part of the \emph{Sun and Planets}-section\footnote{Will not work for Moon or Aries.} of \textsc{Increments and Corrections} as found in the \emph{Nautical Almanac}. It (linearly) interpolates a future GHA given 
+The average of two times is useful for finding the middle time of a series of shots taken with a bubble sextant. 
 
-\begin{itemize}
-\item a current GHA, 
-\item a time difference from this GHA and 
-\item \emph{v} as read from the \emph{Nautical Almanac}.
-\end{itemize}
+\startex{A bubble sextant's first mark was at 21h18m22s and the last at 21h19m15s. When was halftime? }
 
-\startex{Given that the GHA is $110\degree\, 34{\cdot}3'$ at 17h. What is the GHA at 17h 23m 47s? \emph{v}-value is 2.4 as read from the NA.}
-
-\begin{tabular}{rcr|lc}
+\begin{tabular}{ccr|ll}
 Data       & Format      & Key & Display shows\\
-\hline
-\asm{110.3418} &  $ddd.mmss$   & ENTER &\asm{110.3418}\\
-\asm{0.2347} &  $hh.mmss$   & ENTER &\asm{0.2347}\\
-\asm{2.4} &  $min.tenths$   & \asm{\textbf{GSB .4}} &\asm{116.3200} ($116\degree\, 32'\,00''$, GHA at 17h 23m 47s)\\
+\asm{21.1822} &  $hh.mmss$   & ENTER &\asm{21.1822}& First time\\
+\asm{21.1915} &  $hh.mmss$   & GSB .3 &\asm{21.1849}& Halftime was at 21h 18m 49s.
 \end{tabular}
 
-\section{.3, Declination, $\Delta T$, \emph{d}  $\rightarrow$ Declination for time $+\Delta T$} 
+The routine also works for angles $ddd.mmss$.
 
-This routine replaces the \emph{d-corr} part of \textsc{Increments and Corrections} as found in the \emph{Nautical Almanac}. It (linearly) interpolates a future Declination given 
 
-\begin{itemize}
-\item a current declination at time $T$, 
-\item a time difference, $\Delta T$, from this and 
-\item \emph{d} as read from the \emph{Nautical Almanac}.
-\end{itemize}
+\begin{tabular}{ccr|ll}
+Data       & Format      & Key & Display shows\\
+\asm{225.0954} &  $ddd.mmss$   & ENTER &\asm{225.0954}& GHA at 17h\\
+\asm{239.3742} &  $ddd.mmss$   & ENTER &\asm{239.3742}& GHA at 18h\\
+\asm{0.1829} &  $0.mmss$   & GSB .4 &\asm{229.3714}&  GHA Moon 17h 18m 29s: \, = $229\degree\, 37'\,14''$ \\
+\end{tabular}
 
-Beware of signs. 
+\section{.4,\textsc{Increments and Corrections}} 
 
-Decreasing positive declinations -> d negative (numerically smaller)
-
-Decreasing negative declinations -> d positive (numerically larger)
+This routine eliminates the need for \textsc{Increments and Corrections} table in the \emph{Nautical Almanac}. It performs a linear interpolation between two hourly values given the number of minutes and seconds after the first one. All entries are in sexagesimal form $ddd.mmss$ and $0.mmss$. The $ddd.mmss$-values can be both GHA or both Declinations and works for all objects.
 
 
 
-%\startex{Given that the GHA is $110\degree\, 34{\cdot}3'$ at 17h. What is the GHA at 17h 23m 47s? \emph{v}-value is 2.4 as read from the NA.}
-%
-%\begin{tabular}{rcr|lc}
-%Data       & Format      & Key & Display shows\\
-%\hline
-%\asm{110.3418} &  $ddd.mmss$   & ENTER &\asm{110.3418}\\
-%\asm{0.2347} &  $hh.mmss$   & ENTER &\asm{0.2347}\\
-%\asm{2.4} &  $min.tenths$   & \asm{\textbf{GSB .4}} &\asm{116.3200} ($116\degree\, 32'\,00''$, GHA at 17h 23m 47s)\\
-%\end{tabular}
+\startex{GHA Moon is at 17h $225\degree\, 09{\cdot}9'$ and at 18h $239\degree\, 37{\cdot}7'$. What is GHA at 17h 18m 29s? }
+
+
+\begin{tabular}{ccr|ll}
+Data       & Format      & Key & Display shows\\
+\asm{225.0954} &  $ddd.mmss$   & ENTER &\asm{225.0954}& GHA at 17h\\
+\asm{239.3742} &  $ddd.mmss$   & ENTER &\asm{239.3742}& GHA at 18h\\
+\asm{0.1829} &  $0.mmss$   & GSB .4 &\asm{229.3714}&  GHA Moon 17h 18m 29s: \, = $229\degree\, 37'\,14''$ \\
+\end{tabular}
+
+Interpolated GHA Moon is $229\degree\, 37{\cdot}2'$.  Use of \textsc{Increments and Corrections} gives exactly same answer.
+
+
+
 
 
 \section{.0, GHA and Declination $\rightarrow$ Altitude and Azimuth} 

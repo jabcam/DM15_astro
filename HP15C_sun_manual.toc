@@ -9,8 +9,8 @@
 \contentsline {subsection}{\numberline {1.4.4}Calculate Sun's GHA and Declination}{6}{}%
 \contentsline {section}{\numberline {1.5}SHA and Declination $\rightarrow $ Altitude and Azimuth}{7}{}%
 \contentsline {section}{\numberline {1.6}Date and time $\rightarrow $ GHA {\fontfamily {mvs}\fontencoding {U}\fontseries {m}\fontshape {n}\selectfont \char 224}\, and LHA {\fontfamily {mvs}\fontencoding {U}\fontseries {m}\fontshape {n}\selectfont \char 224}\,}{7}{}%
-\contentsline {section}{\numberline {1.7}.4, GHA, $\Delta T$, \emph {v} $\rightarrow $ GHA for time $+\Delta T$}{8}{}%
-\contentsline {section}{\numberline {1.8}.3, Declination, $\Delta T$, \emph {d} $\rightarrow $ Declination for time $+\Delta T$}{8}{}%
+\contentsline {section}{\numberline {1.7}.3, Average of two times or angles}{8}{}%
+\contentsline {section}{\numberline {1.8}.4,\textsc {Increments and Corrections}}{8}{}%
 \contentsline {section}{\numberline {1.9}.0, GHA and Declination $\rightarrow $ Altitude and Azimuth}{8}{}%
 \contentsline {section}{\numberline {1.10}.9, True Altitude $\rightarrow $ Apparent Altitude}{9}{}%
 \contentsline {section}{\numberline {1.11}Use as \emph {Sight Reduction Table}}{9}{}%
